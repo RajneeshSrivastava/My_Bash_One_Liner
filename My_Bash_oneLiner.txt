@@ -1,0 +1,117 @@
+Job|tr -d '"' # delete quote
+
+awk 'NR==FNR{a[$1];next}$1 in a' StudyGenotypeSNPIDs.txt  data59k.txt   #file 1 common data fetch from <file2>
+awk '$4<=0.01 {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' tomtom.txt | grep 'SOX2' # to awk and grep column sorting-wise
+awk '{print $1":"($2+1)"-"$3}' /<dir>/300_Exon.bed | samtools faidx <Input_genome.fasta>
+awk '{ gsub(",", " ") } 1' BS_CLIPDB_hg19.csv # Delimiter
+awk 'NR==FNR { a[$0]; next } $0 in a' TP.txt SRSF7_BS_Priortized_Exons.txt# print elements common in A and B
+awk 'NR==FNR { a[$0]; next } !($0 in a)' TP.txt SRSF7_BS_Priortized_Exons.txt# Present in file B not in A
+awk '$2 != "NA"' FS='\t' SRSF7_K562_CRISPR.txt >SRSF7_K562_CRISPR_1.txt # delete row(s) if NA in nth column
+awk '{sub(/;.*/,""); print}' *.tsv # Delete anything after ;
+awk '{ print $2, $NF }' Y.txt >Qube.txt # NF mean to print last column
+awk '{print $(NF-5),"\t",$NF}' <filename>  # nth column from last
+awk '{print $4,$5"";}' <INPUTFILE> > <OUTPUTFILE> # print specific columns# here it is for col 4,5.
+###awk 'FNR==NR { a[$1]=$0; next } $1 in a { print $1, a[$1], $0 }' SNP_genome_loc_4.txt Genfile_5.txt >Zat.txt # merge 2 files via matching 1st column
+awk '{$2=$3=$4=$5="";gsub(/ +/," ")}1' file  # Remove column by changing $X1=$X2
+awk '{print substr($0,length-10)}' <INPUT>  # Get last 10 characters per line.
+awk 'NR==FNR{a[$1];next}$5 in a{print}' File1 File 2 # need to try
+awk '!seen[$1<=$2? $1 FS $2: $2 FS $1]++' <FILE.txt> # A B or B A -  read/print just 1 times
+awk '{print $1,$2,((($3/($3<0?$3*-1:$3))*(($3<0?$3*-1:$3)+(1-$4)))/2),((($5/($5<0?$5*-1:$5))*(($5<0?$5*-1:$5)+(1-$6)))/2),$3,$4,$5,$6}' # Calculator awk
+awk '{if ($12=="+") print $0, $7":"$8"-"$9-10; else print $0,$7":"$9-19"-"$9}' Analysis_v1.tab> Analysis_v2.tab
+awk '{if ($15>=0.7 && $16>=70)print $0}' Analysis_v0.tab > Analysis_70.7_v0.tab # IF AND in awk
+awk -F"\t" -v OFS="\t" '{ for(N=1; N<=NF; N++) if($N=="") $N="NA" } 1' Test.txt >Test2.txt # Replace empty cell with NA
+awk '!seen[$1]++' Super-DO_GWAS_Mapped.txt|awk '{print $1, $4}'|tr ' ' '\t' |awk -F"\t" -v OFS="\t" '{ for(N=1; N==NF; N++) if($N=="NA") $N="False";else $N="GWAS" } 1' > Super-DO_GWAS_Mapped.Tag.txt &
+awk -F' ' 'NF>1{a[$1] = a[$1]"|"$2};END{for(i in a)print i" "a[i]}' Test3.txt # match two lines by Column 1 within a file
+awk '{ print NR, $0 }' HepG2_Exon_hg19_Exp.tsv# print line no. as column 1
+awk '{print $1, substr($2,length($2)-10)}' TEST.txt # print last 10 character for given column, here 2nd
+awk '{print $1, substr($2,1,length($2)-10)}' TEST.txt # exclude last 10 character for given column, here 2nd
+awk '{print $1, substr($2,11,length($2)-20)}' TEST.txt #exclude 10 (n=10) base from start,(n+1) and 10 base from end (2 x n) for given column
+awk '{if ($1~/>/) print $1"\t"$2"\n""letter-probability matrix:\talength=4\tw="$2"\tnsites=20\tE=0"; else print $0}' Attract_pwm.txt|sed 's/>/MOTIF /' > Attract_pwm_II.txt
+awk '$3=="gene"{print $0}' Homo_sapiens.GRCh38.97.gtf |tr ' ' '\t'|awk '{print "chr"$1,$4,$5,$7,$10,$14,$NF}' > Genes_annotations_hg38_p12.txt
+awk '{for(i=6;i<=NF;i++) t+=$i; print t; t=0}' <FILE> # Sum all the values in each row of a multi column matrix
+
+for i in *.tsv; do awk '{print $0 " " FILENAME }' $i # Not Working
+for file in *.res; do sed -i "s/$/ $file/" "$file"; done  # Suffix file name in last column
+for f in $(find -name '*.sh'); do qsub $f; done
+for f in $(find -name '*.sh'); do
+for f in $(find -name '*.tsv'); do cp $f <target dir> ;done #copy files from multiple subdirectories and paste to new destination 
+for i in $(find -name '*.tsv');*; do echo Filename : "$i";echo;cat "$i"; done
+for i in *.tsv; do awk '{print $0 " " FILENAME }' $i > ${i}.tmp ; mv ${i}.tmp ${i} ; done
+for i in *.tsv; do awk '{sub(/;.*/,""); print}' $i > ${i}.tmp ; mv ${i}.tmp ${i} ; done
+for f in ago1_output.csv; do sed -i "s/$/\t$f/" $f; done  # Here you can add the file name to a last column in file
+for f in $(find -name '*.sh'); do qsub $f; done  # looping all alike file in shell
+for i in {1..85997}; do echo $((RANDOM%1000+0)); done > /<dir>/randomScore1.txt # Randomize score; 1000-1 range. Values row # 85997)
+for i in `seq 204078`; do sed -n `echo $RANDOM % 70 | bc`p R1.bed; done > IGF2BP1_Neg1.bed & # randomize lines in a file
+#RANDOM#for f in $(find -name 'My*'); do cat header.txt $f >  ${f}"_H".txt ; mv ${f}.txt ${f}"H" ; done
+for file in ./*; do /<dir>/pigz-2.4/pigz --best -k -p 16 -r ${file%.*}$file; done # zipping in parallel and multi looping
+
+for f in $(find -name '*.bed'); do grep -v "Application" $f > ${f}"I"; done
+for f in $(find -name '*.bed'); do  awk '{print $1,$2,$3}' $f|sort -k 1,1 -k2,2n|uniq|wc -l > ${f}"I"; done
+for f in $(cat RBP.tab); do grep "$f" ./TIERs/EK.txt> ${f}".txt"; done # Grep element of a file from raw file
+for f in $(cat RBP.tab); do bedtools intersect -f 0.5 -r -a ./Unique_C_peaks.bed -b ./../<dir>/$f.txt -wa|sort -k 1,1 -k2,2n|uniq|wc -l> ${f}".txt"; done
+
+
+scp -r rsrivast@bigred2.uits.iu.edu:/<DIR>/Fastq/* /<DIR>/Fastq/
+
+comm -12 HEPG2_gene.txt K562_gene.txt|wc -l #_count_common.tsv
+comm -13 HEPG2_gene.txt K562_gene.txt|wc -l #count_A_unique_2.tsv
+comm -23 HEPG2_gene.txt K562_gene.txt|wc -l #count_B_unique_3.tsv
+
+
+sed 's/find/replace/' <File Name> #find and replace
+sed 's/[[:space:]]\+/ /g' <Filename> Output # Remove extra white space
+sed 's/[[:space:]]\+/ /g' <Filename> Output  # Remove extra white space
+sed -e 's/ * *//g' Y.txt>1Q.txt  # Remove space bw two words
+sed -e 's/ * *//g' Y.txt>Q.txt   #remove space in bw any character
+sed -e 's/ *|*/|/g' Y.txt>Q.txt  #remove single space between two word and insert pipe
+sed 'n,rd' <FILENAME>  # remove from n to r line in a file
+sed -i -e 's/^/chr/' *.bed # add a prefix chr in each line with edition in same file "-i" option
+sed -i -e 's/'$(echo "chrtrack")'/track/g' *.bdg # delete a "string" and replace by '/this/g'
+sed -i '1!b;s/test/blah/' # replace a string in nth line, here its 1st.
+sed '/^[^>]/ y/uU/tT/' Test.fa >Test_DNA.fa #convert RNAtoDNA fasta
+sed 's/ $/ 0/g' # replace empty string with 0
+
+cat 1Q.txt | sed 's/.\{1\}/& /g'>2Q.txt   # Insert space bw two characters
+cat <INPUTFILE> |tr 'X' 'Y'> <OUTPUTFILE>  # replace character/word
+cat "foobarbazblargblurg" | sed 's/.\{4\}/& /g' #insert space in bw character_here at every 4
+cat <INPUT> | tr ' ' '\t' > <OUTPUT>      # Convert space to tab delimited file
+
+find . -exec touch -c {} \; # Touch recursively with directory and its content
+
+perl -lane'$, = " "; print @F[1..$#F]' A1.txt>U1.txt # Delete 1st column(perl consider as 0) and retain till end
+perl -lane'$, = ""; print @F[1..$#F]' A1.txt>U1.txt # Delete 1st column(perl consider as 0) and retain till end without space given as "".
+
+sort -nk 1 test.txt # sort column by col 1
+sort -rnk 1 test.txt # sort column by col 1 in reverse order
+sort -t, -nuk1 dup.txt OR sort -t, -u -k1,1n dup.txt # extract unique line (in ppi)
+sort -gk 4 AML_LNC-RBP_Cor_sorted_noNA.tab > AML_LNC-RBP_Cor_sorted_noNA_2.tab # in case numbers are exponential, use generic 'g' option
+
+grep -o 'chr12' Genfile_8_chr_sorted.txt > chr.txt
+grep -o 'Raj' Text.txt|wc -l # How many times term 'Raj' is repeated in file OR it will print(newline by default) n times 'Raj' where n = occurances in file.  wc -l gives count
+grep 'chr1\b' Genfile_8_chr_sorted.txt >chr1.txt   # fetch specific data # \b used for avoiding numeric term
+grep -E '(GA)\1' file #looks for entries with the same character appearing more than once #but doesn't ask how often.
+grep -E '(.)\1{4,}' file #looks for entries with the same character with exactly 5 or more matches
+grep -E '(.){5,}' file   #looks for entries with the same character with exactly 5 or more matches
+grep -E '(GAGAGAGAGA)\1{5,}' file #looks for entries with the same character appearing more than once but doesn't ask how often. This is close to what I am looking for, but I still want to set a number of repeatings.
+
+cut -c-10 3_first.txt > raj.txt # Get first 10 characters per line 
+cp -R TCGA*/ /N/dc2/projects/MAMMALEXP/Raj_LIHC  # sync folder with all content
+
+###
+Parse a file
+for f in *.normalized_results; do awk ' { print $2 } ' $f ; done  > RESULT.txt  # *.normalized will se the suffix pattern in directory.
+cp RESULT.txt test/             # cp copy command
+split -a 3 -l 20532 RESULT.txt # split the file as xaaa - xaaz => tends to xzzz (till data ends)
+paste xa* > S1.txt
+paste xb* > S2.txt
+paste S1.txt S2.txt > Final.txt
+
+#####
+
+for f in TCGA*/*corrected.sf; do sed '1,5d' $f; done  > /N/dc2/projects/MAMMALEXP/Raj_LIHC/R1.txt
+awk '{print $3,"";}' R.txt >A1.txt
+split -a 3 -l 214294 A1.txt
+paste xa* > S1.txt
+
+#####
+
